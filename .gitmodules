@@ -1,0 +1,3 @@
+[submodule "AIForcesAPI"]
+	path = AIForcesAPI
+	url = https://github.com/aalekseevx/AIForcesAPI
