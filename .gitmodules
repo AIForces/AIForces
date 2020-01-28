@@ -1,3 +1,3 @@
-[submodule "AIForcesAPI"]
-	path = /docs/source/modules/AIForcesAPI
-	url = https://github.com/aalekseevx/AIForcesAPI.git
+[submodule "docs/source/modules/docs/source/modules"]
+	path = docs/source/modules/docs/source/modules
+	url = https://github.com/AIForces/AIForcesAPI/
