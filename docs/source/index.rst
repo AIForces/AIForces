@@ -5,5 +5,6 @@ Welcome to AIForces's documentation!
    :maxdepth: 2
 
    modules/AIForcesAPI/docs/source/index
+   problemsetting
 
 AIForces global docs.
