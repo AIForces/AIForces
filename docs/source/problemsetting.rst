@@ -17,6 +17,7 @@ Let's talk them over one by one.
 General rules
 =============
 
+- All folder names, starting with ``__ai`` are reserved by the AIForces. Please use other folder names.
 - All files listed in configuration file must have diffrent filenames (not paths, but **filenames**)
 - You can't include binary files in the problem, unless they are created during ``build.sh``
 - All filenames must be in ASCII
