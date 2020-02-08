@@ -85,9 +85,9 @@ Below is the example of correct configuration file:
    # Estimated difficulty from 1 to 5
    difficulty: 1
    # Time limit per move in microseconds
-   time-limit: 1000
+   time-limit: 5 s
    # RAM limit in bytes
-   memory-limit: 268435456
+   memory-limit: 512 MB
    # Minimal and maximal players number
    minimal_players: 2
    maximal_players: 2
@@ -226,23 +226,38 @@ time-limit
 ^^^^^^^^^^
    **Required: false**
 
-   Suggested per-move time limit for the problem (in microseconds).
+   Suggested per-move time limit for the problem.
+   You can use following units:
+
+   - ms - millisecond (1/1000 of a second)
+   - s - second
+
+   Value can't be more than 1 minute.
 
    Example
       .. code-block:: yaml
 
-         time-limit: 1000
+         time-limit: 5 s
 
 memory-limit
 ^^^^^^^^^^^^
    **Required: false**
 
-   Suggested per-move memory limit for the problem (in microseconds).
+   Suggested per-move memory limit for the problem.
+   You can use following multiples:
+
+   - `B` for bytes
+   - `kB` for kilobytes
+   - `KiB` for kibibytes
+   - `MB` for megabytes
+   - `MiB` for mebibyte
+
+   Value can't me more than 1 GB.
 
    Example
       .. code-block:: yaml
 
-         memory-limit: 268435456
+         memory-limit: 512 MB
 
 minimal/maximal players
 ^^^^^^^^^^^^^^^^^^^^^^^
