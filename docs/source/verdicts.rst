@@ -1,0 +1,4 @@
+.. _verdicts-label:
+
+Verdicts
+********

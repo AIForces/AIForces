@@ -78,40 +78,37 @@ Below is the example of correct configuration file:
    # but might be changed by the managers.
    short-name: tic-tac-toe
    name:
-       ru_RU: Крестики-Нолики
-       en_US: Tic Tac Toe
+       rus: Крестики-Нолики
+       eng: Tic Tac Toe
    # Brief description
    decription: The game may be a bit boring, but don't you like it after all?
-   # Estimated difficulty from 1 to 5
-   difficulty: 1
-   # Time limit per move in microseconds
+   # Per-move time limit
    time-limit: 5 s
-   # RAM limit in bytes
+   # RAM limit
    memory-limit: 512 MB
-   # Minimal and maximal players number
-   minimal_players: 2
-   maximal_players: 2
+   # Players number. May be a single integer or range (e.g 2-4)
+   players: 2
 
 
-   # Example of solutions to be checked. 
+   # Author's and tester's solutions.
    solutions:
        ermolin:
            name: Nikolay Ermolin.
            file: solutions/ermolin.cpp
            language: g++17
-           used-for-pretests: true
-           used-as-example: true
-           expected-verdicts:
-               - TL
-               - ML
+           access: public
+           type: pretest
        starkov:
            name: Svyatoslav Starkov.
            file: solutions/starkov.cpp
            language: g++17
-           used-for-pretests: true
-           used-as-example: false
-           expected-verdicts:
-               - OK
+           access: private
+           type: checker-verifier:TL
+       kekov:
+           name: Useless solution
+           file: solutions/useless.cpp
+           language: pypy3
+           acess: private
 
    # Relative paths to problem's files
 
@@ -122,33 +119,32 @@ Below is the example of correct configuration file:
    # Scripts to build/clean the problem and checker script
    scripts:
        builder: scripts/doall.sh
-       wiper: scripts/wipeall.sh
        validator: scripts/validate.sh
        checker: scripts/check.sh
 
    # Localized visualizers
    visualizer:
-       ru_RU:
-           html: "/visualizer/ru_RU/visualizer-ru_RU.html"
-           css: "/visualizer/ru_RU/visualizer-ru_RU.css"
-           js: "/visualizer/ru_RU/visualizer-ru_RU.js"
-       en_US:
-           html: "/visualizer/en_US/visualizer-en_US.html"
-           css: "/visualizer/en_US/visualizer-en_US.css"
-           js: "/visualizer/en_US/visualizer-en_US.js"
+       rus:
+           html: "/visualizer/rus/visualizer-rus.html"
+           css: "/visualizer/rus/visualizer-rus.css"
+           js: "/visualizer/rus/visualizer-rus.js"
+       eng:
+           html: "/visualizer/eng/visualizer-eng.html"
+           css: "/visualizer/eng/visualizer-eng.css"
+           js: "/visualizer/eng/visualizer-eng.js"
 
    # Localized statements
    statements:
-       ru_RU:
-           pdf: "/statements/ru_RU/statements-ru_RU.pdf"
-           html: "/statements/ru_RU/statements-ru_RU.html"
-           epub: "/statements/ru_RU/statements-ru_RU.epub"
-       en_US:
-           pdf: "/statements/en_US/statements-en_US.pdf"
-           html: "/statements/en_US/statements-en_US.html"
-           epub: "/statements/en_US/statements-en_US.epub"
+       rus:
+           pdf: "/statements/rus/statements-rus.pdf"
+           html: "/statements/rus/statements-rus.html"
+           epub: "/statements/rus/statements-rus.epub"
+       eng:
+           pdf: "/statements/eng/statements-eng.pdf"
+           html: "/statements/eng/statements-eng.html"
+           epub: "/statements/eng/statements-eng.epub"
 
-   # Other files you may want to share with users.
+   # Other files you want to share with users.
    public_files:
    - public/instruction.txt
    - public/change.log
@@ -197,8 +193,8 @@ name
       .. code-block:: yaml
 
          name:
-             ru_RU: Крестики-Нолики
-             en_US: Tic Tac Toe
+             rus: Крестики-Нолики
+             eng: Tic Tac Toe
 
 description
 ^^^^^^^^^^^
@@ -210,17 +206,6 @@ description
       .. code-block:: yaml
 
          decription: The game may be a bit boring, but don't you like it after all?
-
-difficulty
-^^^^^^^^^^
-   **Required: false**
-
-   Suggested estimated difficulty from 1 to 5.
-
-   Example
-      .. code-block:: yaml
-
-         difficulty: 1
 
 time-limit
 ^^^^^^^^^^
@@ -259,58 +244,65 @@ memory-limit
 
          memory-limit: 512 MB
 
-minimal/maximal players
-^^^^^^^^^^^^^^^^^^^^^^^
+players
+^^^^^^^
    **Required: true**
 
-   Minimal and maximal players number for the game.
+   Number of players, which compete together. May be a single integer or range of integers.
 
    Example
       .. code-block:: yaml
 
-         # Minimal and maximal players number
-         minimal_players: 2
-         maximal_players: 2
+         players: 2
+
+      .. code-block:: yaml
+
+         players: 2-4
 
 solutions
 ^^^^^^^^^
    **Required: false**
 
-   Author's and tester's solutions.
-   Language is one of the supported languages (TODO addreference).
-   List **all** possible verdicts of the solution in the expected-verdicts. It is needed to verify that
-   checker performs challenges correctly.
-   Other fields are self-explanatory.
+   Describes Author's and tester's solutions.
 
+   - ``access`` may be private, protected or public.
+
+   - ``language`` is one of the :ref:`supported programming languages <languages-label>`.
+
+   You may set ``type`` of the solution to ``pretest`` or ``checker-verifier:[VERDICT]``,
+   where ``[VERDICT]`` is one of :ref:`system verdicts <verdicts-label>`. If you omit the field, the 
+   solution will not serve the particular purpose, but still will be available.
+
+   Read more about :ref:`solutions-label`
 
    Example
       .. code-block:: yaml
 
-         # Example of solutions to be checked. 
+         # Authors and testers solutions.
          solutions:
              ermolin:
                  name: Nikolay Ermolin.
                  file: solutions/ermolin.cpp
                  language: g++17
-                 used-for-pretests: true
-                 used-as-example: true
-                 expected-verdicts:
-                     - TL
-                     - ML
+                 access: public
+                 type: pretest
              starkov:
                  name: Svyatoslav Starkov.
                  file: solutions/starkov.cpp
                  language: g++17
-                 used-for-pretests: true
-                 used-as-example: false
-                 expected-verdicts:
-                     - OK
+                 access: private
+                 type: checker-verifier:TL
+             kekov:
+                 name: Useless solution
+                 file: solutions/useless.cpp
+                 language: pypy3
+                 acess: private
 
 tests_config
 ^^^^^^^^^^^^
    **Required: true**
 
-   JSON file, which stores tests' configuration. May be created during run of ``build.sh`` script.
+   JSON file, which stores tests configuration. May be created during run of ``build.sh`` script.
 
    Example
       .. code-block:: yaml
@@ -323,13 +315,11 @@ scripts
    Files of problem scripts.
 
    (TODO addreference)
-   Builder is preparing the problem for working, wiper removes all the files created by builder.
+   Builder is preparing the problem for working.
    Validator script reads test file and strctly checks it validity. Read more. 
    Checker script starts runs challenges and produces logs. Read more.
 
    builder
-      **Required: false**
-   wiper
       **Required: false**
    validator
       **Required: false**
@@ -341,7 +331,6 @@ scripts
 
          scripts:
              builder: scripts/doall.sh
-             wiper: scripts/wipeall.sh
              validator: scripts/validate.sh
              checker: scripts/check.sh
 
@@ -352,18 +341,21 @@ visualizer
 
    Visualizer web page files, localized for several languages.
 
+   Use `ISO 639-2 <https://www.loc.gov/standards/iso639-2/php/code_list.php>`
+   Codes for the Representation of Names of Languages.
+
    Example
       .. code-block:: yaml
 
          visualizer:
-             ru_RU:
-                 html: "/visualizer/ru_RU/visualizer-ru_RU.html"
-                 css: "/visualizer/ru_RU/visualizer-ru_RU.css"
-                 js: "/visualizer/ru_RU/visualizer-ru_RU.js"
-             en_US:
-                 html: "/visualizer/en_US/visualizer-en_US.html"
-                 css: "/visualizer/en_US/visualizer-en_US.css"
-                 js: "/visualizer/en_US/visualizer-en_US.js"
+             rus:
+                 html: "/visualizer/rus/visualizer-rus.html"
+                 css: "/visualizer/rus/visualizer-rus.css"
+                 js: "/visualizer/rus/visualizer-rus.js"
+             eng:
+                 html: "/visualizer/eng/visualizer-eng.html"
+                 css: "/visualizer/eng/visualizer-eng.css"
+                 js: "/visualizer/eng/visualizer-eng.js"
 
 statements
 ^^^^^^^^^^
@@ -371,17 +363,20 @@ statements
 
    Statements of the problem, given in different formats and different languages.
 
+   Use `ISO 639-2 <https://www.loc.gov/standards/iso639-2/php/code_list.php>`
+   Codes for the Representation of Names of Languages.
+
    Example
       .. code-block:: yaml
 
-         ru_RU:
-             pdf: "/statements/ru_RU/statements-ru_RU.pdf"
-             html: "/statements/ru_RU/statements-ru_RU.html"
-             epub: "/statements/ru_RU/statements-ru_RU.epub"
-         en_US:
-             pdf: "/statements/en_US/statements-en_US.pdf"
-             html: "/statements/en_US/statements-en_US.html"
-             epub: "/statements/en_US/statements-en_US.epub"
+         rus:
+             pdf: "/statements/rus/statements-rus.pdf"
+             html: "/statements/rus/statements-rus.html"
+             epub: "/statements/rus/statements-rus.epub"
+         eng:
+             pdf: "/statements/eng/statements-eng.pdf"
+             html: "/statements/eng/statements-eng.html"
+             epub: "/statements/eng/statements-eng.epub"
 
 
 public_files
@@ -437,9 +432,6 @@ Builder is the script aiming to build the problem from sources. It usually inclu
 - Compiling checker, test_generator, validator
 - Generating tests and test config
 
-Also, you need to create wiper, which cancels all the changes. It is checked by the problem verifier.
-(TODO / TODISCUSS. Do we need it? Why can we just ``git stash`` or smth like that?) 
-
 Checker
 =======
 
@@ -479,17 +471,33 @@ Validator is a script, which reads test file from the stdin and checks it for va
 Any logs written to stderr will be saved for internal use. If test is incorrect, validator must finish the process
 with non-zero exit cdde. Validation is performed automatically by ``problem-verifier``.
 
+.. _solutions-label:
+
 Solutions
 =========
 
-Authors' and testers' solutions are used
+Solutions are created by problem's authors and testers. They serve 3 purposes:
 
-- as examples for different programming languages
-- to run pretests
-- to verify that checker works in a correct way.
+- Show examples of solutions to the participants
+- Verify that checker works correctly
+- Pretesting the submissions.
 
-Include solutions with different expected verdicts to check that problem perfroms challenges correctly.
-You do not need to compile solution file in ``build.sh``, problem verifier will do it.
+Solution access modifiers are supported. Solution can be public, private or protected.
+
+- Public solutions are used as example solutions for participants
+- Protected solutions can be played with, but source code is kept private
+- Private solutions can't be interacted with directly.
+
+Solutions marked as pretests **must** finish with the ``OK`` verdict. They are used as opponents
+for the participant's solutions on pretests. The only aim of pretest is to warn participant in case
+his solution behaves wrongly. Mind that it's a good idea to make pretests public or at least
+protected, so that participants could see why their solution fails the pretests.
+
+When you create a checker verifier, design it in such way, that it get the same verdict with any opponent and test number.
+Use this expected verdict in solution configuration.
+
+Also all solutions, used for pretests, are used as checker verifiers and are expected to have ``OK`` verdict.
+You don't have to add them to the list one more time.
 
 Statements
 ==========
