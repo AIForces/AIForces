@@ -236,8 +236,10 @@ memory-limit
    - `KiB` for kibibytes
    - `MB` for megabytes
    - `MiB` for mebibyte
+   - `GB` for gigabyte
+   - `GiB` for gibibyte
 
-   Value can't me more than 1 GB.
+   Value can't exceed 1 GiB.
 
    Example
       .. code-block:: yaml
