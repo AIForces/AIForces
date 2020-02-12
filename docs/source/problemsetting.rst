@@ -108,7 +108,7 @@ Below is the example of correct configuration file:
            name: Useless solution
            file: solutions/useless.cpp
            language: pypy3
-           acess: private
+           access: private
 
    # Relative paths to problem's files
 
