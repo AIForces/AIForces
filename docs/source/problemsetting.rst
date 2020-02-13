@@ -1,6 +1,150 @@
 Problemsetting
 **************
 
+What is a problem?
+==================
+
+Problem is actually a piece of software, usually developed by contest organizers. Generally, it's an
+interactor, which executes user's solutions, control their interaction with the game and finally
+generates game logs.
+
+It's a good idea to make problem code open source, however, you may want to keep some files (e.g. hidden levels)
+in secret till the end of your official contest. It's convinient to develop problems in teams using
+git version control system, that's why we have wide GitHub integration. However, it's not a must.
+
+You can explore these example problems if you prefer to learn by example
+
+- Tron (TODO addreference)
+
+Problem files are hosted on AIForces server and can be uploaded directly using web interface or fetched from
+git. Only source files (and sometimes tests or statements) should be uploaded. We recommend to build problem
+from sources on the server by creating ``build.sh`` script. **It's prohibited to upload executable files**.
+
+Typical toolstack for problemsetting is:
+
+- Python
+- HTML
+- CSS
+- JavaScript
+- LaTex
+- Bash
+
+However, system interacts with the problem using bash scripts, so if you're familiar with them,
+you can replace Python and LaTex with other tools, otherwise you may use default scripts.
+However, web visualizer (which is an important part
+of the problem) requires HTML, CSS and JS.
+
+Problem is stored as a folder (may be a git repo), and usually has the following structure:
+
+Before build:
+   .. code-block:: text
+
+      ├── bin
+      ├── config
+      ├── lib
+      │   ├── olymp.sty
+      │   ├── problem.tex
+      │   └── statements.ftl
+      ├── private
+      ├── problem.yaml
+      ├── public
+      │   ├── change_log.txt
+      ├── scripts
+      │   ├── build.sh
+      │   ├── check.sh
+      │   └── validator.sh
+      ├── solutions
+      │   ├── ermolin.cpp
+      │   ├── starkov.cpp
+      │   └── useless.cpp
+      ├── src
+      │   ├── check.py
+      │   ├── test_generator.py
+      │   ├── tron.tex
+      │   └── validator.cpp
+      ├── statements
+      │   ├── eng
+      │   └── rus
+      ├── tests
+      └── visualizer
+          ├── eng
+          │   ├── visualizer-eng.css
+          │   ├── visualizer-eng.html
+          │   └── visualizer-eng.js
+          └── rus
+              ├── visualizer-rus.css
+              ├── visualizer-rus.html
+              └── visualizer-rus.js
+After build:
+   .. code-block:: text
+
+      ├── bin
+      │   └── validator
+      ├── config
+      │   └── tests.json
+      ├── lib
+      │   ├── olymp.sty
+      │   ├── problem.tex
+      │   └── statements.ftl
+      ├── private
+      │   ├── 01_notes.txt
+      │   ├── 02_notes.txt
+      │   ├── 03_notes.txt
+      │   ├── 04_notes.txt
+      │   ├── 05_notes.txt
+      │   ├── 06_notes.txt
+      │   ├── 07_notes.txt
+      │   ├── 08_notes.txt
+      │   ├── 09_notes.txt
+      │   └── 10_notes.txt
+      ├── problem.yaml
+      ├── public
+      │   └── change_log.txt
+      ├── scripts
+      │   ├── build.sh
+      │   ├── check.sh
+      │   └── validator.sh
+      ├── solutions
+      │   ├── ermolin.cpp
+      │   ├── starkov.cpp
+      │   └── useless.cpp
+      ├── src
+      │   ├── check.py
+      │   ├── test_generator.py
+      │   ├── tron.tex
+      │   └── validator.cpp
+      ├── statements
+      │   ├── eng
+      │   │   ├── statements-eng.epub
+      │   │   ├── statements-eng.html
+      │   │   └── statements-eng.pdf
+      │   └── rus
+      │       ├── statements-rus.epub
+      │       ├── statements-rus.html
+      │       └── statements-rus.pdf
+      ├── tests
+      │   ├── 01.txt
+      │   ├── 02.txt
+      │   ├── 03.txt
+      │   ├── 04.txt
+      │   ├── 05.txt
+      │   ├── 06.txt
+      │   ├── 07.txt
+      │   ├── 08.txt
+      │   ├── 09.txt
+      │   └── 10.txt
+      └── visualizer
+          ├── eng
+          │   ├── visualizer-eng.css
+          │   ├── visualizer-eng.html
+          │   └── visualizer-eng.js
+          └── rus
+              ├── visualizer-rus.css
+              ├── visualizer-rus.html
+              └── visualizer-rus.js
+
+However, you can use your own structure (but it's not recommended) and describe it in the ``problem.yaml``.
+
 Problem consists of the following parts:
 
 - Configuration
