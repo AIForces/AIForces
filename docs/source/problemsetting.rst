@@ -5,7 +5,7 @@ What is a problem?
 ==================
 
 Problem is actually a piece of software, usually developed by contest organizers. Generally, it's an
-interactor, which executes user's solutions, control their interaction with the game and finally
+interactor, which executes user's solutions, controls their interaction with the game and finally
 generates game logs.
 
 It's a good idea to make problem code open source, however, you may want to keep some files (e.g. hidden levels)
@@ -115,11 +115,9 @@ After build:
       │   └── validator.cpp
       ├── statements
       │   ├── eng
-      │   │   ├── statements-eng.epub
       │   │   ├── statements-eng.html
       │   │   └── statements-eng.pdf
       │   └── rus
-      │       ├── statements-rus.epub
       │       ├── statements-rus.html
       │       └── statements-rus.pdf
       ├── tests
@@ -162,7 +160,7 @@ General rules
 =============
 
 - All folder names, starting with ``__ai`` are reserved by the AIForces. Please use other folder names.
-- All files listed in configuration file must have diffrent filenames (not paths, but **filenames**)
+- All files must have diffrent filenames (not paths, but **filenames** including extension)
 - You can't include binary files in the problem, unless they are created during ``build.sh``
 - All filenames must be in ASCII
 - All scripts will run in a firejail. Use only software you're allowed to. No internet access, no filesystem access outside the problem folder.
@@ -286,11 +284,9 @@ Below is the example of correct configuration file:
        rus:
            pdf: "/statements/rus/statements-rus.pdf"
            html: "/statements/rus/statements-rus.html"
-           epub: "/statements/rus/statements-rus.epub"
        eng:
            pdf: "/statements/eng/statements-eng.pdf"
            html: "/statements/eng/statements-eng.html"
-           epub: "/statements/eng/statements-eng.epub"
 
    # Other files you want to share with users.
    public_files:
@@ -323,7 +319,7 @@ short-name
 ^^^^^^^^^^
    **Required: true**
 
-   Short name of the problem (not displaying), matches ``^[a-zA-Z0-9_\-=+.,!]{4,20}$``.
+   Short name of the problem (not displaying), matches `^[a-zA-Z0-9_\-=+.,!]{4,20}$ <https://regex101.com/r/OsZJss/1>`_.
 
    Example
         
@@ -466,7 +462,7 @@ scripts
    
    Files of problem scripts.
 
-   :ref:`builder-label` is preparing the problem for working.
+   :ref:`builder-label` is preparing the problem for further work.
    :ref:`validator-label` script reads test file and strctly checks it validity. Read more. 
    :ref:`checker-label` script starts runs challenges and produces logs. Read more.
 
@@ -517,11 +513,9 @@ statements
          rus:
              pdf: "/statements/rus/statements-rus.pdf"
              html: "/statements/rus/statements-rus.html"
-             epub: "/statements/rus/statements-rus.epub"
          eng:
              pdf: "/statements/eng/statements-eng.pdf"
              html: "/statements/eng/statements-eng.html"
-             epub: "/statements/eng/statements-eng.epub"
 
 
 public_files
@@ -570,6 +564,16 @@ Actually, you may omit any informatoin except ``id``. If your problem is not abo
 
 .. _builder-label:
 
+Scripts
+=======
+
+System is interating with your problem via bash scripts, but you can run another scripting
+language inside it (e.g. Python). All arguments are passed to script as JSON strings through env vars.
+
+File descriptors for I/O are inherited from the parent, their integer values are passed through env. vars.
+
+Your stdout/stderr will be saved for internal use.
+
 Builder
 =======
 
@@ -608,7 +612,7 @@ Checker
 
 Checker is a script used to perform challenges between multiple players. Interface works as follows:
 
-Arguments to the checker are given in ``AI_CHECKER_ARGS`` in JSON format
+Arguments to the checker are given in ``AI_CHECKER_ARGS`` env. variable in JSON format
 
 players_cmds
    Ready bash commands to start solutions
@@ -698,7 +702,8 @@ Result log should have the following format
       }
    ]
 
-Game log is designed in your way, make it easy to read by the visualizer. 
+Game logs is designed by you, so make sure it is constructed in a way,
+what would be easy for a visualiser to process.
 
 .. _validator-label:
 
@@ -740,11 +745,11 @@ You don't have to add them to the list one more time.
 Statements
 ==========
 
-Statements are usually written in LaTex and compiled into 3 diffeent formats(pdf, html, epub) for comfortable usage.
+Statements are usually written in LaTex and compiled into 3 diffeent formats(pdf, html) for comfortable usage.
 You need to compile separate statements for each language. They should be compiled during ``build.sh`` or before the upload.
 
 Visualizator
 ============
 
 Visualizer is a webpage, which uses Challenge API (TODO Addreference) to download logs of the challenge and visualize the game in a
-convinient way. It will embeded to an AIForces frontend using ``iframe``.
+сonvenient way. It will be embeded to an AIForces frontend using ``iframe``.
