@@ -4,21 +4,25 @@ Problemsetting
 What is a problem?
 ==================
 
-Problem is actually a piece of software, usually developed by contest organizers. Generally, it's an
-interactor, which executes user's solutions, controls their interaction with the game and finally
-generates game logs.
+A problem is actually a piece of software usually developed by contest
+organizers. Generally, it is an interactor, which executes user's solutions,
+controls their interaction with the problem and finally generates game logs.
 
-It's a good idea to make problem code open source, however, you may want to keep some files (e.g. hidden levels)
-in secret till the end of your official contest. It's convinient to develop problems in teams using
-git version control system, that's why we have wide GitHub integration. However, it's not a must.
+It's a good idea to make the problem's source code open, however, you may want
+to keep some files (e.g. hidden levels) secret until the end of your official
+contest. It's convenient to develop problems in teams using git version control
+system, that's why we have wide GitHub integration. However, it's not a must.
 
-You can explore these example problems if you prefer to learn by example
+You can take a look at these example problems if you would like to have some
+guidance.
 
 - Tron (TODO addreference)
 
-Problem files are hosted on AIForces server and can be uploaded directly using web interface or fetched from
-git. Only source files (and sometimes tests or statements) should be uploaded. We recommend to build problem
-from sources on the server by creating ``build.sh`` script. **It's prohibited to upload executable files**.
+Problem files are hosted on an AIForces server and can be uploaded directly,
+using a web interface or fetched from a remote repository (GitHub, BitBucket,
+etc). Only source files (and sometimes tests or statements) should be uploaded.
+We recommend to build problem from sources on the server by creating a
+``build.sh`` script. **It's prohibited to upload executable files**.
 
 Typical toolstack for problemsetting is:
 
@@ -29,12 +33,13 @@ Typical toolstack for problemsetting is:
 - LaTex
 - Bash
 
-However, system interacts with the problem using bash scripts, so if you're familiar with them,
-you can replace Python and LaTex with other tools, otherwise you may use default scripts.
-However, web visualizer (which is an important part
-of the problem) requires HTML, CSS and JS.
+The system interacts with the problem using bash scripts, so it is possible to
+customize how Python and LaTex are called or use other tools. A plethora of
+default scripts is also available. The web visualizer (which is an important
+part of the problem) requires HTML, CSS and JS and has no default implementation.
 
-Problem is stored as a folder (may be a git repo), and usually has the following structure:
+Problem files are stored in a single folder (may be a git repo), and usually
+have the following structure:
 
 Before build:
    .. code-block:: text
@@ -141,7 +146,8 @@ After build:
               ├── visualizer-rus.html
               └── visualizer-rus.js
 
-However, you can use your own structure (but it's not recommended) and describe it in the ``problem.yaml``.
+You can use your own folder structure (it's not recommended) and describe it in
+the ``problem.yaml``.
 
 Problem consists of the following parts:
 
@@ -152,31 +158,35 @@ Problem consists of the following parts:
 - Validator (recommended, but not mandatory)
 - Solutions (recommended, but not mandatory)
 - Statements
-- Visualizator
+- Visualizer
 
 Let's talk them over one by one.
 
 General rules
 =============
 
-- All folder names, starting with ``__ai`` are reserved by the AIForces. Please use other folder names.
-- All files must have diffrent filenames (not paths, but **filenames** including extension)
-- You can't include binary files in the problem, unless they are created during ``build.sh``
-- All filenames must be in ASCII
-- All scripts will run in a firejail. Use only software you're allowed to. No internet access, no filesystem access outside the problem folder.
+- All folder names starting with ``__ai`` are reserved by the AIForces.
+  Please use other folder names.
+- All files must have different filenames (not paths, but **filenames**
+  including the extension)
+- You can't have binary files in the problem, unless they are created by
+  ``build.sh``
+- All filenames must only contain ASCII characters
+- All scripts will run in a firejail. Use only software you're allowed. No
+  internet access, no filesystem access outside the problem folder.
 - All the source files must not take more than 5 megabytes.
 - Use ISO-639-2_ Codes for the Representation of Names of Languages.
 
 .. _ISO-639-2: https://www.loc.gov/standards/iso639-2/php/code_list.php
 
-Availiable software
+Available software
 ===================
 
-All your scripts will run in a firejail, which means you can't access any files outside your folder.
-It means that you should rely **only on software listed below**.
+All your scripts will run in a firejail, which means you can't access any files
+outside your folder. It means that you can use **only the software listed below**.
 
-Also, all the neccesarry folders will be added to ``PATH`` for the current session.
-So you can use this software as usual.
+Additionally, all the necessary binaries will be added to ``PATH`` for the
+current session. You can use this software as usual:
 
 List of software
 
@@ -203,12 +213,13 @@ In all python venvs the following packages are installed
 Configuration file
 ==================
 
-In the root directory of your problem folder, you **must** include problem configuration file named ``problem.yaml``.
+In the root directory of the problem folder, you **must** include a problem
+configuration file named ``problem.yaml``.
 
-Below is the example of correct configuration file:
+Below is an example of a correct configuration file:
 
 .. code-block:: yaml
-    
+
    # problem.yaml
    # AIforces problem configuration file.
    # See https://aiforces.readthedocs.io/en/latest/problemsetting.html#configuration-file for details
@@ -225,7 +236,7 @@ Below is the example of correct configuration file:
        rus: Крестики-Нолики
        eng: Tic Tac Toe
    # Brief description
-   decription:
+   description:
       rus: Просто классика
       eng: The game may be a bit boring, but don't you like it after all?
    # Per-move time limit
@@ -298,7 +309,7 @@ Supported settings
 ------------------
 
 .. note::
-   The presence of any other key that isn’t documented here will make the build to fail.
+   The presence of any key that isn’t documented here will make the build fail.
    This is to avoid typos and provide feedback on invalid configurations.
 
 version
@@ -308,7 +319,7 @@ version
    Version of the configuration file. You're currently reading about 1.0
 
    .. warning::
-      Please, put version into quotes. Otherwise, YAML may mark it as a floating point number.
+      Please, put the version into quotes. Otherwise, YAML may mark it as a floating point number.
 
    Example
       .. code-block:: yaml
@@ -319,10 +330,10 @@ short-name
 ^^^^^^^^^^
    **Required: true**
 
-   Short name of the problem (not displaying), matches `^[a-zA-Z0-9_\-=+.,!]{4,20}$ <https://regex101.com/r/OsZJss/1>`_.
+   Short name of the problem (not the displayname), matches `^[a-zA-Z0-9_\-=+.,!]{4,20}$ <https://regex101.com/r/OsZJss/1>`_.
 
    Example
-        
+
       .. code-block:: yaml
 
          short-name: tic-tac-toe
@@ -331,7 +342,7 @@ name
 ^^^^
    **Required: false**
 
-   Suggested name of the problem given in all needed languages.
+   Display name of the problem given in all needed languages.
 
    Example
       .. code-block:: yaml
@@ -349,7 +360,7 @@ description
    Example
       .. code-block:: yaml
 
-         decription:
+         description:
             rus: Просто классика
             eng: The game may be a bit boring, but don't you like it after all?
 
@@ -396,7 +407,7 @@ players
 ^^^^^^^
    **Required: true**
 
-   Number of players, which compete together. May be a single integer or range of integers.
+   Number of players which compete together. May be a single integer or a range.
 
    Example
       .. code-block:: yaml
@@ -411,15 +422,16 @@ solutions
 ^^^^^^^^^
    **Required: false**
 
-   Describes Author's and tester's solutions.
+   Describes author's and tester's solutions.
 
    - ``access`` may be private, protected or public.
 
    - ``language`` is one of the :ref:`supported programming languages <languages-label>`.
 
-   You may set ``type`` of the solution to ``pretest`` or ``checker-verifier:[VERDICT]``,
-   where ``[VERDICT]`` is one of :ref:`system verdicts <verdicts-label>`. If you omit the field, the 
-   solution will not serve the particular purpose, but still will be saved.
+   You may set the ``type`` of the solution to ``pretest`` or ``checker-verifier:[VERDICT]``,
+   where ``[VERDICT]`` is one of :ref:`system verdicts <verdicts-label>`. If you
+   omit this field, the solution will not serve any purpose, but still will be
+   saved on disk.
 
    Read more about :ref:`solutions-label`
 
@@ -444,13 +456,13 @@ solutions
                  name: Useless solution
                  file: solutions/useless.cpp
                  language: pypy3
-                 acess: private
+                 access: private
 
 tests_config
 ^^^^^^^^^^^^
    **Required: true**
 
-   JSON file, which stores tests configuration. May be created during run of ``build.sh`` script.
+   JSON file which stores the test configuration. May be created by the ``build.sh`` script.
 
    Example
       .. code-block:: yaml
@@ -459,12 +471,12 @@ tests_config
 
 scripts
 ^^^^^^^
-   
-   Files of problem scripts.
 
-   :ref:`builder-label` is preparing the problem for further work.
-   :ref:`validator-label` script reads test file and strctly checks it validity. Read more. 
-   :ref:`checker-label` script starts runs challenges and produces logs. Read more.
+   Problem script files.
+
+   :ref:`builder-label` script compiles the task into a ready state.
+   :ref:`validator-label` script reads a test file and checks it for validity.
+   :ref:`checker-label` script starts and runs challenges and produces logs.
 
    builder
       **Required: false**
@@ -505,7 +517,7 @@ statements
 ^^^^^^^^^^
    **Required: true**
 
-   Statements of the problem, given in different formats and different languages.
+   Problem statements in different formats and different languages.
 
    Example
       .. code-block:: yaml
@@ -536,12 +548,13 @@ public_files
 Tests
 =====
 
-One challenge configuration is called *Test*. It can be for example, one level from the game.
-If you need to prepare files, describing the tests, you can do it while building or upload them with the problem.
+One challenge configuration is called a *Test*. It can be, for example, one
+level of the game. If you need to prepare files describing the tests, you can
+do it while building or upload them together with the problem.
 
-What you **must** create is a tests configuration file and add path it to problem's config. However,
-this file may be generated during run of *Builder*. Tests configuration
-looks like this JSON:
+What you **must** create is a test configuration file and add its path to the
+problem config. This file, however, may be generated by the *Builder*. This
+file looks like the following JSON:
 
 .. code-block:: json
 
@@ -559,32 +572,35 @@ looks like this JSON:
       }
    ]
 
-Actually, you may omit any informatoin except ``id``. If your problem is not about different levels, create only one test.
+Actually, you may omit all keys except the ``id``. If your problem does not have
+different levels, you can create only one test.
 
-
-.. _builder-label:
 
 Scripts
 =======
 
-System is interating with your problem via bash scripts, but you can run another scripting
-language inside it (e.g. Python). All arguments are passed to script as JSON strings through env vars.
+The system is interacting with your problem via bash scripts so you can run
+another scripting language in it (e.g. Python). All arguments are passed to the
+script as JSON strings through the env vars.
 
-File descriptors for I/O are inherited from the parent, their integer values are passed through env. vars.
+File descriptors for I/O are inherited from the parent, their integer values
+are also passed through env vars.
 
 Your stdout/stderr will be saved for internal use.
+
+.. _builder-label:
 
 Builder
 =======
 
-Builder is the script aiming to build the problem from sources. It usually includes:
+The builder script produces end files from sources. It usually includes a:
 
 - Compiling visualizer
 - Compiling checker, test_generator, validator
 - Generating tests and test config
 
-Current problem's settings are served as JSON in ``AI_PROBLEM_SETTINGS`` enviromental
-variable the same way thay are described in ``problem.yaml``.
+Current problem settings are presented as JSON in the ``AI_PROBLEM_SETTINGS``
+env variable the same way they are described in ``problem.yaml``.
 
 .. code-block:: json
 
@@ -594,7 +610,7 @@ variable the same way thay are described in ``problem.yaml``.
             "rus": "Крестики-Нолики",
             "eng": "Tic Tac Toe"
         },
-       "decription": {
+       "description": {
            "rus": "Просто классика",
            "eng": "The game may be a bit boring, but don't you like it after all?"
        },
@@ -610,28 +626,29 @@ Any builder logs written to stderr will be saved for internal use.
 Checker
 =======
 
-Checker is a script used to perform challenges between multiple players. Interface works as follows:
+The checker is the script that governs players and their interaction. It has
+the following interface:
 
-Arguments to the checker are given in ``AI_CHECKER_ARGS`` env. variable in JSON format
+Arguments are provided in the ``AI_CHECKER_ARGS`` env variable as JSON
 
 players_cmds
-   Ready bash commands to start solutions
+   Pre-made bash commands to start solutions
 players_files
-   binary files of the solutions (needed for firejail)
+   The solutions binary files (needed for firejail)
 test_id
    Current test id
 test_description_fd
-   File descriptor integer value to read data, describing the test (if was provided).
+   File descriptor integer value for the test file (if such was provided)
 time_limit
    Per move time limit in milliseconds
 memory_limit
    RAM limit in bytes.
 result_log_fd
-   File descriptor integer value to write result_log JSON.
+   File descriptor integer value to write result_log JSON
 game_log_fd
-   File descriptor integer value to write game_log file.
+   File descriptor integer value to write game_log file
 streams_log_fd
-   File descriptor integer value to write interaction logs.
+   File descriptor integer value to write interaction logs
 
 .. code-block:: json
 
@@ -656,10 +673,11 @@ streams_log_fd
 
 Any checker logs written to stderr will be saved for internal use.
 
-Streams log should have the following format. Integer numbers represent time moments (ticks):
+Stream logs should have the following format, integer keys represent time
+moments (ticks):
 
 .. code-block:: json
-   
+
    [
       {
          "stdin": {
@@ -680,7 +698,7 @@ Streams log should have the following format. Integer numbers represent time mom
       }
    ]
 
-Result log should have the following format
+Result logs should have the following format
 
 .. code-block:: json
 
@@ -702,54 +720,62 @@ Result log should have the following format
       }
    ]
 
-Game logs is designed by you, so make sure it is constructed in a way,
-what would be easy for a visualiser to process.
+Game logs are designed by you, so make sure they are constructed in a way,
+what would be easy for a visualizer to process.
 
 .. _validator-label:
 
 Validator
 =========
 
-Validator is a script, which reads test file from the stdin and checks it for validity.
-Any logs written to stderr will be saved for internal use. If test is incorrect, validator must finish the process
-with non-zero exit code. Validation is performed automatically by ``problem-verifier``.
+A validator is a script which reads test files from stdin and checks them for
+validity. Any logs written to stderr will be saved for internal use. If the test
+happens to be incorrect, the validator must finish with a non-zero code.
+Validation is performed automatically by the ``problem-verifier``.
 
 .. _solutions-label:
 
 Solutions
 =========
 
-Solutions are created by problem's authors and testers. They serve 3 purposes:
+Solutions are created by problem authors and testers. They serve 3 purposes:
 
 - Show examples of solutions to the participants
-- Verify that checker works correctly
-- Pretesting the submissions.
+- Verify that the checker works correctly
+- Pretest the submissions
 
-Solution access modifiers are supported. Solution can be public, private or protected.
+Solution access modifiers are supported. Solutions can be either public, private
+or protected.
 
 - Public solutions are used as example solutions for participants
-- Protected solutions can be played with, but source code is kept private
-- Private solutions can't be interacted with directly.
+- Protected solutions can be played against, but the source code is kept private
+- Private solutions can't be interacted with directly
 
-Solutions marked as pretests **must** finish with the ``OK`` verdict. They are used as opponents
-for the participant's solutions on pretests. The only aim of pretest is to warn participant in case
-his solution behaves wrongly. Mind that it's a good idea to make pretests public or at least
-protected, so that participants could see why their solution fails the pretests.
+Solutions marked as pretests **must** finish with the ``OK`` verdict. They are
+used as opponents for the participant solutions on pretests. The only aim of a
+pretest is to warn participants in case their solution behaves badly. Bear in
+mind that it's a good idea to make pretests public or at least protected, so
+that participants could see why their solution fails the pretests.
 
-When you create a checker verifier, design it in such way, that it get the same verdict with any opponent and test number.
-Use this expected verdict in solution configuration.
+When you create a checker verifier, design it in such a way, that it would get
+the same verdict with any opponent and test number. Use this expected verdict
+in the solution configuration.
 
-Also all solutions, used for pretests, are used as checker verifiers and are expected to have ``OK`` verdict.
-You don't have to add them to the list one more time.
+Also, all solutions used for pretests are used as checker verifiers and are
+expected to have ``OK`` verdicts. You don't have to add them to the list
+explicitly.
 
 Statements
 ==========
 
-Statements are usually written in LaTex and compiled into 3 diffeent formats(pdf, html) for comfortable usage.
-You need to compile separate statements for each language. They should be compiled during ``build.sh`` or before the upload.
+Statements are usually written in LaTex and compiled into several different
+formats (like pdf or html) for the sake of convenience. You have to compile
+separate statement files for each language. They should be compiled by
+``build.sh`` or by you before the upload.
 
-Visualizator
-============
+Visualizer
+==========
 
-Visualizer is a webpage, which uses Challenge API (TODO Addreference) to download logs of the challenge and visualize the game in a
-сonvenient way. It will be embeded to an AIForces frontend using ``iframe``.
+A visualizer is a webpage which uses the Challenge API (TODO Addreference) to
+access logs of a challenge and visualize the game in a convenient way. It will
+be embedded in a webpage using an ``iframe``.
