@@ -167,6 +167,9 @@ General rules
 - All filenames must be in ASCII
 - All scripts will run in a firejail. Use only software you're allowed to. No internet access, no filesystem access outside the problem folder.
 - All the source files must not take more than 5 megabytes.
+- Use ISO-639-2_ Codes for the Representation of Names of Languages.
+
+.. _ISO-639-2: https://www.loc.gov/standards/iso639-2/php/code_list.php
 
 Availiable software
 ===================
@@ -174,9 +177,8 @@ Availiable software
 All your scripts will run in a firejail, which means you can't access any files outside your folder.
 It means that you should rely **only on software listed below**.
 
-If you don't have ``bin`` folder, it will be created and all software executable
-from the list will be copied there. Also, all the neccesarry folders will be added to
-``PATH`` for the current session. So you can use this software as usual.
+Also, all the neccesarry folders will be added to ``PATH`` for the current session.
+So you can use this software as usual.
 
 List of software
 
@@ -225,7 +227,9 @@ Below is the example of correct configuration file:
        rus: Крестики-Нолики
        eng: Tic Tac Toe
    # Brief description
-   decription: The game may be a bit boring, but don't you like it after all?
+   decription:
+      rus: Просто классика
+      eng: The game may be a bit boring, but don't you like it after all?
    # Per-move time limit
    time-limit: 5 s
    # RAM limit
@@ -344,12 +348,14 @@ description
 ^^^^^^^^^^^
    **Required: false**
 
-   Suggested brief description of the problem.
+   Suggested brief description of the problem (localized).
 
    Example
       .. code-block:: yaml
 
-         decription: The game may be a bit boring, but don't you like it after all?
+         decription:
+            rus: Просто классика
+            eng: The game may be a bit boring, but don't you like it after all?
 
 time-limit
 ^^^^^^^^^^
@@ -417,7 +423,7 @@ solutions
 
    You may set ``type`` of the solution to ``pretest`` or ``checker-verifier:[VERDICT]``,
    where ``[VERDICT]`` is one of :ref:`system verdicts <verdicts-label>`. If you omit the field, the 
-   solution will not serve the particular purpose, but still will be available.
+   solution will not serve the particular purpose, but still will be saved.
 
    Read more about :ref:`solutions-label`
 
@@ -460,10 +466,9 @@ scripts
    
    Files of problem scripts.
 
-   (TODO addreference)
-   Builder is preparing the problem for working.
-   Validator script reads test file and strctly checks it validity. Read more. 
-   Checker script starts runs challenges and produces logs. Read more.
+   :ref:`builder-label` is preparing the problem for working.
+   :ref:`validator-label` script reads test file and strctly checks it validity. Read more. 
+   :ref:`checker-label` script starts runs challenges and produces logs. Read more.
 
    builder
       **Required: false**
@@ -487,9 +492,6 @@ visualizer
 
    Visualizer web page files, localized for several languages.
 
-   Use `ISO 639-2 <https://www.loc.gov/standards/iso639-2/php/code_list.php>`
-   Codes for the Representation of Names of Languages.
-
    Example
       .. code-block:: yaml
 
@@ -509,9 +511,6 @@ statements
 
    Statements of the problem, given in different formats and different languages.
 
-   Use `ISO 639-2 <https://www.loc.gov/standards/iso639-2/php/code_list.php>`
-   Codes for the Representation of Names of Languages.
-
    Example
       .. code-block:: yaml
 
@@ -529,7 +528,7 @@ public_files
 ^^^^^^^^^^^^
    **Required: false**
 
-   Any other files that you want to share with the problem.
+   Any other files that you want to share with the participants.
 
    Example
       .. code-block:: yaml
@@ -566,8 +565,10 @@ looks like this JSON:
       }
    ]
 
-Actually, you may omit any informatoin except ``id``. If your game is not about different levels, create only one test.
+Actually, you may omit any informatoin except ``id``. If your problem is not about different levels, create only one test.
 
+
+.. _builder-label:
 
 Builder
 =======
@@ -578,44 +579,135 @@ Builder is the script aiming to build the problem from sources. It usually inclu
 - Compiling checker, test_generator, validator
 - Generating tests and test config
 
+Current problem's settings are served as JSON in ``AI_PROBLEM_SETTINGS`` enviromental
+variable the same way thay are described in ``problem.yaml``.
+
+.. code-block:: json
+
+   {
+       "short-name": "tic-tac-toe",
+       "name": {
+            "rus": "Крестики-Нолики",
+            "eng": "Tic Tac Toe"
+        },
+       "decription": {
+           "rus": "Просто классика",
+           "eng": "The game may be a bit boring, but don't you like it after all?"
+       },
+       "time-limit": "5 s",
+       "memory-limit": "512 MB",
+       "players": "2"
+   }
+
+Any builder logs written to stderr will be saved for internal use.
+
+.. _checker-label:
+
 Checker
 =======
 
 Checker is a script used to perform challenges between multiple players. Interface works as follows:
 
-Command line arguments
+Arguments to the checker are given in ``AI_CHECKER_ARGS`` in JSON format
 
-   --players_cmds cmds
-      ready bash commands to start solutions
-   --players_files files
-      binary files of the solutions (needed for firejail)
-   --test_id id
-      test id number
-   --test_file file
-      test file (if was mentioned)
-   --time_limit seconds
-      Per move time limit
-   --memory_limit bytes
-      RAM limit
-   --streams_log_file file
-      Filename of the output stdin/stdout/stderr log
-   --game_log_file file
-      Filename of the output game log
-   --result_log_file file
-      Filename of the output game result file, includes scores and verdicts.
+players_cmds
+   Ready bash commands to start solutions
+players_files
+   binary files of the solutions (needed for firejail)
+test_id
+   Current test id
+test_description_fd
+   File descriptor integer value to read data, describing the test (if was provided).
+time_limit
+   Per move time limit in milliseconds
+memory_limit
+   RAM limit in bytes.
+result_log_fd
+   File descriptor integer value to write result_log JSON.
+game_log_fd
+   File descriptor integer value to write game_log file.
+streams_log_fd
+   File descriptor integer value to write interaction logs.
 
-Checker should produce logs of the following format:
+.. code-block:: json
+
+   {
+       "players_cmds": [
+          "python /path/to/file.py",
+          "/path/to/exec"
+       ],
+       "players_files": [
+          "/path/to/file.py",
+          "/path/to/exec"
+       ],
+
+       "test_id": 1,
+       "test_description_fd": 3,
+       "time_limit": 1000,
+       "memory_limit": 536870912,
+       "result_log_fd": 4,
+       "game_log_fd": 5,
+       "streams_log_fd": 6
+   }
 
 Any checker logs written to stderr will be saved for internal use.
 
-TODO streams, game, result log format
+Streams log should have the following format. Integer numbers represent time moments (ticks):
+
+.. code-block:: json
+   
+   [
+      {
+         "stdin": {
+            "0": "Stdin",
+            "3": "Followed stdin given after 3 tick."
+         },
+         "stdout": {
+            "0": "First response",
+            "3": "Last response"
+         },
+         "stderr": {
+            "0": "My debug output",
+            "3": "My last debug output"
+         }
+      },
+      {
+          "..." : "Same for all other players"
+      }
+   ]
+
+Result log should have the following format
+
+.. code-block:: json
+
+   [
+      {
+         "verdict": "OK",
+         "score": 500,
+         "comment": "solution worked OK"
+      },
+
+      {
+         "verdict": "TL",
+         "score": 200,
+         "comment": "solution experienced TLE on tick 678."
+      }
+
+      {
+          "..." : "Same for all other players"
+      }
+   ]
+
+Game log is designed in your way, make it easy to read by the visualizer. 
+
+.. _validator-label:
 
 Validator
 =========
 
 Validator is a script, which reads test file from the stdin and checks it for validity.
 Any logs written to stderr will be saved for internal use. If test is incorrect, validator must finish the process
-with non-zero exit cdde. Validation is performed automatically by ``problem-verifier``.
+with non-zero exit code. Validation is performed automatically by ``problem-verifier``.
 
 .. _solutions-label:
 
@@ -649,12 +741,10 @@ Statements
 ==========
 
 Statements are usually written in LaTex and compiled into 3 diffeent formats(pdf, html, epub) for comfortable usage.
-You need to compile separate statements for each language. They must be compiled during ``build.sh``.
+You need to compile separate statements for each language. They should be compiled during ``build.sh`` or before the upload.
 
 Visualizator
 ============
 
-Visualizer is a webpage, which uses API (how? TODO) to download logs of the challenge and visualize the game in a
-convinient way.
-
-TODO
+Visualizer is a webpage, which uses Challenge API (TODO Addreference) to download logs of the challenge and visualize the game in a
+convinient way. It will embeded to an AIForces frontend using ``iframe``.
